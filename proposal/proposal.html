@@ -1,0 +1,863 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Proposal — Portfolio &amp; Dealflow Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16211c; --ink-soft:#3d4f45; --muted:#6d7f74; --faint:#93a298;
+    --paper:#fbfaf7; --card:#ffffff; --rule:#dfe4de; --rule-soft:#eef1ec;
+    --accent:#2f5d45; --accent-soft:#e8f0ea; --brass:#8a6b2f; --brass-soft:#f6f0e2;
+    --clay:#9c5a45; --clay-soft:#f8ece7;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'IBM Plex Sans',system-ui,sans-serif;
+    color:var(--ink); background:var(--paper);
+    font-size:9.6pt; line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{font-family:'Newsreader',Georgia,serif; font-weight:600; color:var(--ink); margin:0;}
+  p{margin:0 0 7px;}
+  strong{font-weight:600;}
+  code,.mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:var(--accent); text-decoration:none;}
+
+  .sheet{max-width:186mm; margin:0 auto; padding:0 2mm;}
+
+  /* ---------- Cover ---------- */
+  .cover{min-height:252mm; display:flex; flex-direction:column; padding-top:6mm;}
+  .cover-rule{height:3px; background:var(--ink); margin-bottom:5mm;}
+  .cover-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10mm; margin-bottom:16mm;}
+  .monogram{display:flex; align-items:center; gap:3mm;}
+  .monogram svg{width:9mm; height:9mm; color:var(--accent);}
+  .monogram span{font-family:'Newsreader',serif; font-size:16pt; font-weight:600; letter-spacing:-.03em;}
+  .monogram span i{color:var(--accent); font-style:normal;}
+  .cover-meta{text-align:right; font-size:7.6pt; color:var(--muted); line-height:1.7; letter-spacing:.02em;}
+  .cover-kicker{font-family:'IBM Plex Mono',monospace; font-size:7.6pt; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); margin-bottom:6mm;}
+  .cover h1{font-size:37pt; line-height:1.04; letter-spacing:-.028em; font-weight:500; margin-bottom:5mm;}
+  .cover h1 em{font-style:italic; color:var(--accent);}
+  .cover-lede{font-size:11pt; line-height:1.6; color:var(--ink-soft); max-width:132mm; margin-bottom:12mm;}
+  .cover-lede strong{color:var(--ink);}
+
+  .figureband{display:grid; grid-template-columns:repeat(4,1fr); border-top:1.5px solid var(--ink); border-bottom:1px solid var(--rule);}
+  .figureband > div{padding:4.5mm 4mm 4.5mm 0; border-right:1px solid var(--rule);}
+  .figureband > div:last-child{border-right:0;}
+  .figureband > div + div{padding-left:4mm;}
+  .figureband span{display:block; font-family:'IBM Plex Mono',monospace; font-size:6.9pt; letter-spacing:.14em; text-transform:uppercase; color:var(--faint); margin-bottom:1.6mm;}
+  .figureband strong{display:block; font-family:'Newsreader',serif; font-size:19pt; font-weight:600; letter-spacing:-.03em; line-height:1.1;}
+  .figureband em{display:block; font-style:normal; font-size:7.8pt; color:var(--muted); margin-top:1mm;}
+
+  .cover-prepared{margin-top:auto; display:grid; grid-template-columns:1fr 1fr; gap:8mm; padding-top:8mm; border-top:1px solid var(--rule);}
+  .cover-prepared h4{font-family:'IBM Plex Mono',monospace; font-size:6.9pt; letter-spacing:.16em; text-transform:uppercase; color:var(--faint); font-weight:500; margin-bottom:2mm;}
+  .cover-prepared p{font-size:8.6pt; color:var(--ink-soft); margin:0; line-height:1.6;}
+  .cover-foot{margin-top:6mm; font-size:7.4pt; color:var(--faint); line-height:1.6;}
+
+  /* ---------- Sections ---------- */
+  section{padding-top:2mm;}
+  .sec-head{display:flex; align-items:baseline; gap:3.5mm; padding-bottom:2.2mm; margin:8mm 0 4.5mm; border-bottom:1.5px solid var(--ink);}
+  .sec-num{font-family:'IBM Plex Mono',monospace; font-size:8pt; font-weight:600; color:var(--accent); letter-spacing:.06em;}
+  .sec-head h2{font-size:15.5pt; letter-spacing:-.02em; font-weight:600;}
+  .sec-head .sec-note{margin-left:auto; font-size:7.4pt; color:var(--faint); font-family:'IBM Plex Mono',monospace; letter-spacing:.06em;}
+  h3.sub{font-family:'IBM Plex Sans',sans-serif; font-size:9.2pt; font-weight:700; letter-spacing:.01em; color:var(--ink); margin:5.5mm 0 2mm;}
+  h3.sub:first-child{margin-top:0;}
+  .lede{font-size:10pt; line-height:1.6; color:var(--ink-soft); margin-bottom:4mm;}
+
+  /* ---------- Tables ---------- */
+  table{width:100%; border-collapse:collapse; font-size:8.4pt; margin:2mm 0 4mm;}
+  caption{caption-side:top; text-align:left; font-family:'IBM Plex Mono',monospace; font-size:7pt; letter-spacing:.13em; text-transform:uppercase; color:var(--faint); padding-bottom:2mm;}
+  th{text-align:left; font-family:'IBM Plex Mono',monospace; font-size:6.9pt; font-weight:600; letter-spacing:.11em; text-transform:uppercase; color:var(--muted); padding:0 2.4mm 2mm; border-bottom:1px solid var(--ink);}
+  td{padding:2.3mm 2.4mm; border-bottom:1px solid var(--rule-soft); vertical-align:top; color:var(--ink-soft);}
+  tbody tr:nth-child(even) td{background:#fcfcfa;}
+  td.num,th.num{text-align:right; font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums; white-space:nowrap;}
+  td.key{color:var(--ink); font-weight:600;}
+  tfoot td{border-top:1.5px solid var(--ink); border-bottom:0; font-weight:600; color:var(--ink); background:transparent !important; padding-top:2.8mm;}
+  .tbl-tight td,.tbl-tight th{padding:1.9mm 2.2mm;}
+
+  /* ---------- Milestone blocks ---------- */
+  .ms{border:1px solid var(--rule); border-left:2.5px solid var(--accent); background:var(--card); padding:4mm 4.5mm; margin-bottom:3.2mm; break-inside:avoid;}
+  .ms-head{display:flex; align-items:flex-start; gap:3mm; margin-bottom:2.5mm;}
+  .ms-tag{font-family:'IBM Plex Mono',monospace; font-size:7.4pt; font-weight:600; letter-spacing:.08em; color:var(--accent); background:var(--accent-soft); padding:.9mm 2mm; border-radius:1mm; white-space:nowrap; margin-top:.4mm;}
+  .ms-head h3{font-family:'Newsreader',serif; font-size:12.2pt; font-weight:600; letter-spacing:-.015em; line-height:1.25;}
+  .ms-figs{margin-left:auto; text-align:right; white-space:nowrap;}
+  .ms-figs strong{display:block; font-family:'IBM Plex Mono',monospace; font-size:10.4pt; font-weight:600; color:var(--ink);}
+  .ms-figs span{display:block; font-size:7.2pt; color:var(--faint); font-family:'IBM Plex Mono',monospace; letter-spacing:.05em;}
+  .ms ul{margin:0 0 2.5mm; padding-left:4.2mm;}
+  .ms li{margin-bottom:1.1mm; color:var(--ink-soft); font-size:8.5pt; line-height:1.5;}
+  .ms li::marker{color:var(--accent);}
+  .ms-foot{display:flex; flex-wrap:wrap; gap:2mm 5mm; padding-top:2.2mm; border-top:1px solid var(--rule-soft); font-size:7.5pt; color:var(--muted);}
+  .ms-foot b{font-family:'IBM Plex Mono',monospace; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--faint); font-size:6.8pt; margin-right:1.4mm;}
+
+  /* ---------- Callouts ---------- */
+  .callout{border:1px solid var(--rule); background:var(--card); padding:3.6mm 4mm; margin:3mm 0; break-inside:avoid;}
+  .callout.accent{border-left:2.5px solid var(--accent);}
+  .callout.brass{border-left:2.5px solid var(--brass); background:var(--brass-soft); border-color:#e8dcc2;}
+  .callout.clay{border-left:2.5px solid var(--clay); background:var(--clay-soft); border-color:#ecdcd5;}
+  .callout h4{font-family:'IBM Plex Sans',sans-serif; font-size:8.6pt; font-weight:700; margin-bottom:1.6mm;}
+  .callout p{font-size:8.4pt; color:var(--ink-soft); margin-bottom:0; line-height:1.55;}
+  .callout ul{margin:1.5mm 0 0; padding-left:4.2mm;}
+  .callout li{font-size:8.4pt; color:var(--ink-soft); margin-bottom:1mm;}
+
+  .twocol{display:grid; grid-template-columns:1fr 1fr; gap:5mm;}
+  .threecol{display:grid; grid-template-columns:repeat(3,1fr); gap:3.4mm;}
+
+  .pill{display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:6.8pt; letter-spacing:.09em; text-transform:uppercase; padding:.8mm 1.8mm; border-radius:1mm; background:var(--accent-soft); color:var(--accent); font-weight:600;}
+  .pill.warn{background:var(--brass-soft); color:var(--brass);}
+  .pill.risk{background:var(--clay-soft); color:var(--clay);}
+  .pill.neutral{background:#f1f3f0; color:var(--muted);}
+
+  /* Schedule bar chart */
+  .sched{margin:2mm 0 4mm;}
+  .sched-row{display:grid; grid-template-columns:38mm 1fr; align-items:center; gap:3mm; padding:1.5mm 0; border-bottom:1px solid var(--rule-soft);}
+  .sched-row > span{font-size:8pt; color:var(--ink); font-weight:500;}
+  .sched-track{position:relative; height:5.2mm; background:repeating-linear-gradient(90deg,var(--rule-soft) 0 1px,transparent 1px calc(100%/26));}
+  .sched-bar{position:absolute; top:0; bottom:0; background:var(--accent); border-radius:.6mm; display:flex; align-items:center; justify-content:flex-end; padding-right:1.6mm;}
+  .sched-bar em{font-style:normal; font-family:'IBM Plex Mono',monospace; font-size:6.4pt; color:#fff; letter-spacing:.04em;}
+  .sched-bar.soft{background:#8fae99;}
+  .sched-bar.brass{background:var(--brass);}
+  .sched-axis{display:grid; grid-template-columns:38mm 1fr; gap:3mm; margin-top:1.5mm;}
+  .sched-axis > div{display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:6.4pt; color:var(--faint); letter-spacing:.05em;}
+
+  .sig{margin-top:8mm; padding-top:5mm; border-top:1px solid var(--rule); display:grid; grid-template-columns:1fr 1fr; gap:10mm;}
+  .sig p{font-size:8pt; color:var(--muted); margin:0;}
+  .sig .line{height:9mm; border-bottom:1px solid var(--ink); margin-bottom:1.6mm;}
+
+  .break{break-before:page;}
+  .avoid{break-inside:avoid;}
+  .fineprint{font-size:7.4pt; color:var(--faint); line-height:1.6; margin-top:2mm;}
+  .todo{background:#fff8e6; border:1px dashed #d9b96a; padding:1mm 2mm; font-family:'IBM Plex Mono',monospace; font-size:6.8pt; letter-spacing:.06em; color:#8a6b2f; text-transform:uppercase;}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+<!-- ============ COVER ============ -->
+<div class="cover">
+  <div class="cover-rule"></div>
+  <div class="cover-top">
+    <div class="monogram">
+      <svg viewBox="0 0 34 34" fill="none" aria-hidden="true"><path d="M3.5 27.5 14.3 5.5h5.3L8.8 27.5H3.5ZM14.6 27.5 25.4 5.5h5.3L19.9 27.5h-5.3Z" fill="currentColor"/><circle cx="29" cy="26" r="2.5" fill="currentColor"/></svg>
+      <span>alinea<i>.</i></span>
+    </div>
+    <div class="cover-meta">
+      QUOTE REF&nbsp;&nbsp;ALN&#8209;2026&#8209;114<br/>
+      ISSUED&nbsp;&nbsp;24 NOVEMBER 2026<br/>
+      VALID UNTIL&nbsp;&nbsp;31 JANUARY 2027
+    </div>
+  </div>
+
+  <div class="cover-kicker">Proposal &amp; fixed&#8209;price quote · Response to product brief of 12 November 2026</div>
+  <h1>Portfolio &amp; dealflow platform,<br/>built from an empty repository<br/>to <em>production handover</em>.</h1>
+  <p class="cover-lede">A private, bilingual (EN/FR) web platform that keeps <strong>one verified record</strong> of every portfolio company and every deal considered; reads company reports and deal emails as they arrive; files meetings and documents against the right company automatically; and <strong>never lets an unreviewed figure count as fact</strong>.</p>
+
+  <div class="figureband">
+    <div><span>Total effort</span><strong>2,600 h</strong><em>across 8 work packages</em></div>
+    <div><span>Fixed price</span><strong>$26,000</strong><em>range $23,300 – $29,800</em></div>
+    <div><span>Elapsed duration</span><strong>26 weeks</strong><em>22 weeks core build</em></div>
+    <div><span>Run cost after delivery</span><strong>$460 / mo</strong><em>infrastructure + retainer</em></div>
+  </div>
+
+  <div class="cover-prepared">
+    <div>
+      <h4>Prepared for</h4>
+      <p><strong>Margaret Genatios</strong><br/>GoSmartEx · margaret@gosmartex.com<br/>Quotes due 26 November 2026 · Questions by 19 November 2026</p>
+    </div>
+    <div>
+      <h4>Prepared by</h4>
+      <p><strong>Alinea Build Studio</strong><br/>Delivery lead: <span class="todo">Name</span> · <span class="todo">email</span><br/>Blended rate applied: USD 10.00 / hour</p>
+    </div>
+  </div>
+
+  <p class="cover-foot">Confidential. Prepared in response to a private product brief. Contains no investor&#8209;facing scope: no investor book, investor portal, fund or club&#8209;deal vehicles, and no partner/expert ecosystem. Named references and contact details are supplied on request under NDA.</p>
+</div>
+
+<!-- ============ 1. SUMMARY ============ -->
+<section class="break">
+  <div class="sec-head"><span class="sec-num">01</span><h2>Executive summary</h2><span class="sec-note">FIT · PLAN · PRICE</span></div>
+
+  <p class="lede">We have read the brief against the seven principles in section 2 and priced the whole product, not a subset of it. The price is <strong>USD 26,000 fixed</strong> for <strong>2,600 hours</strong> at the agreed blended rate of USD 10.00/hour, delivered over <strong>26 elapsed weeks</strong> by a stable core team of four to five people, in eight acceptance&#8209;gated work packages that mirror the milestones in section 13 of your brief.</p>
+
+  <div class="twocol">
+    <div>
+      <h3 class="sub">What drives the price</h3>
+      <table class="tbl-tight">
+        <tbody>
+          <tr><td class="key">Dealflow (M4)</td><td class="num">690 h</td><td class="num">26.5%</td></tr>
+          <tr><td class="key">Portfolio intelligence (M3)</td><td class="num">420 h</td><td class="num">16.2%</td></tr>
+          <tr><td class="key">Library, intake, review queue (M2)</td><td class="num">380 h</td><td class="num">14.6%</td></tr>
+          <tr><td class="key">Integrations &amp; hardening (M7)</td><td class="num">290 h</td><td class="num">11.2%</td></tr>
+          <tr><td class="key">Discovery, PM, QA, handover (P0)</td><td class="num">270 h</td><td class="num">10.4%</td></tr>
+          <tr><td class="key">Foundation: auth, data model, design system (M1)</td><td class="num">250 h</td><td class="num">9.6%</td></tr>
+          <tr><td class="key">Assistant (M6)</td><td class="num">160 h</td><td class="num">6.2%</td></tr>
+          <tr><td class="key">Founder portal (M5)</td><td class="num">140 h</td><td class="num">5.4%</td></tr>
+        </tbody>
+        <tfoot><tr><td>Total</td><td class="num">2,600 h</td><td class="num">100%</td></tr></tfoot>
+      </table>
+      <p class="fineprint">57% of the effort sits in the three modules that carry your principles: intake, review and the pipe. That distribution is deliberate — the review workflow is the product.</p>
+    </div>
+    <div>
+      <h3 class="sub">The three things we would not compromise</h3>
+      <div class="callout accent">
+        <h4>1 · Provenance is a data model, not a UI label</h4>
+        <p>A claim carries its source SHA&#8209;256, locator, period, currency, capture method and model/prompt version — stored separately from the reviewer, decision and timestamp. Nothing can be displayed as validated without that chain.</p>
+      </div>
+      <div class="callout accent">
+        <h4>2 · The review queue is the only write path to a fact</h4>
+        <p>Extraction stages; a human accepts, corrects, rejects, reconciles or marks not applicable. A correction creates a new revision and the original is retained and diffable. Conflicts are kept side by side until reconciled — never last&#8209;write&#8209;wins.</p>
+      </div>
+      <div class="callout accent">
+        <h4>3 · Idempotency is tested, not asserted</h4>
+        <p>Every ingestion path is covered by a test that runs the same import twice and asserts zero new writes. Emails are keyed on Internet Message&#8209;ID, documents on SHA&#8209;256, deals on a normalised name key.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub">Commercial headline</h3>
+  <table>
+    <thead><tr><th>Term</th><th>Proposed</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="key">Fixed price, whole product</td><td class="num">USD 26,000</td><td>Range USD 23,300 – 29,800; drivers listed per milestone in §3</td></tr>
+      <tr><td class="key">Total effort</td><td class="num">2,600 hours</td><td>At a blended USD 10.00 / hour</td></tr>
+      <tr><td class="key">Elapsed duration</td><td class="num">26 weeks</td><td>22 weeks core build + 4 weeks integration, hardening, cutover</td></tr>
+      <tr><td class="key">Earliest start</td><td>5 January 2027</td><td>Accelerated start 15 December 2026 possible; see §4</td></tr>
+      <tr><td class="key">Production handover</td><td>Week of 28 June 2027</td><td>Followed by an 8&#8209;week defect warranty to 24 August 2027</td></tr>
+      <tr><td class="key">Day rate, work outside scope</td><td class="num">USD 80 / day</td><td>8 hours; half&#8209;day USD 40; weekend/emergency USD 120 / day</td></tr>
+      <tr><td class="key">Monthly cost to run &amp; maintain</td><td class="num">≈ USD 460</td><td>Infrastructure USD 91–323 + retainer USD 240 (24 h); see §8</td></tr>
+      <tr><td class="key">Payment</td><td>15 / 80 / 5</td><td>15% mobilisation, 80% released per accepted milestone, 5% retention after warranty</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout brass">
+    <h4>Rate note — please read before comparing quotes</h4>
+    <p>This proposal is priced strictly at the blended rate you specified: <strong>USD 10.00 per hour</strong>. The rate, not the effort, is what makes the total USD 26,000. For context, the same 2,600&#8209;hour scope delivered at Western European market rates would typically fall between EUR 180,000 and EUR 320,000. We are comfortable building at this rate, and we have priced it honestly rather than trimming scope to make the number look smaller. The practical consequence is calendar time: at this rate we cannot compress the build by adding senior people without raising the price, so the 26&#8209;week schedule assumes a stable core team rather than a large one.</p>
+  </div>
+</section>
+
+<!-- ============ 2. SCOPE ============ -->
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><h2>Scope: what is included and excluded</h2><span class="sec-note">IN / OUT</span></div>
+
+  <div class="twocol">
+    <div>
+      <h3 class="sub">Included in the fixed price</h3>
+      <ul style="margin:0; padding-left:4.4mm; font-size:8.6pt; color:var(--ink-soft); line-height:1.62;">
+        <li>Discovery, architecture, data model for all entities named in §12 of the brief</li>
+        <li>Invitation&#8209;only accounts, five roles, per&#8209;company grants, separate staff and founder session systems</li>
+        <li>Documented design system with tokens, three elevation levels, accessible controls, dark mode, collapsible sidebar, per&#8209;person layout memory</li>
+        <li>Full bilingual EN/FR layer, including script&#8209;written strings stored in both languages, and a CI test that fails on a missing translation</li>
+        <li>Document library with SHA&#8209;256 identity, originals downloadable, reading status, cross&#8209;record search</li>
+        <li>Gmail read&#8209;only intake (shared mailbox + Dealflow label), idempotent, with a resumable job queue</li>
+        <li>Review queue: claims, revisions, conflicts, alerts, actions, acknowledgement/snooze with reason and reopen on new evidence</li>
+        <li>Portfolio intelligence: dashboard, eight company tabs, reporting calendar and periods, deterministic completeness, calls, notes, contacts, manual entry with source, per&#8209;company history</li>
+        <li>Dealflow: New deals inbox, import with staged AI table, deal record with all named fields and eight tabs, board and table views, click&#8209;to&#8209;edit everywhere except system dates, filters and saved views, deal dashboard, configuration of statuses and custom fields</li>
+        <li>AI: deck reading, enrichment proposals, full analysis with evidence, assistant with citations and permission&#8209;scoped actions, cost per call recorded</li>
+        <li>PDF generation of the one&#8209;page deal profile and full investment memo in your layout, plus table export as PDF</li>
+        <li>Founder portal for both uses: periodic report submission and answers to firm requests</li>
+        <li>Integrations: Google/Gmail, Dropbox, Granola, Anthropic Claude, and one&#8209;off Notion/Outlook history import with no write&#8209;back</li>
+        <li>European data residency for database and files; encrypted secrets; audit of every change</li>
+        <li>Automated test suite, staging environment on a copy of realistic data, restore rehearsal, runbooks, documentation, team walkthrough</li>
+        <li>Eight&#8209;week defect warranty after handover</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="sub">Excluded</h3>
+      <ul style="margin:0; padding-left:4.4mm; font-size:8.6pt; color:var(--ink-soft); line-height:1.62;">
+        <li>Anything investor&#8209;facing: investor book, investor portal, fund or club&#8209;deal vehicles, partner/expert ecosystem (excluded by your brief)</li>
+        <li>Any outbound sending of email or messages by the platform — drafts only, sent by a person from their own mail</li>
+        <li>Native iOS/Android applications</li>
+        <li>Third&#8209;party licence and subscription fees: Google Workspace, Dropbox, Granola, Anthropic API, Notion, Outlook</li>
+        <li>Legal work, DPAs, NDAs, and any SOC 2 / ISO 27001 certification (we support audits and provide evidence; certification costs are yours)</li>
+        <li>Ongoing data entry or content maintenance by the firm after handover</li>
+        <li>Translation of the firm's own vocabulary beyond the glossary you supply; the disabled Spanish dictionary is delivered off</li>
+        <li>Migration of data beyond the stated one&#8209;off Notion/Outlook history import and the load of the 17 portfolio companies</li>
+        <li>24/7 support outside European business hours (available as a change order)</li>
+      </ul>
+
+      <h3 class="sub">Assumptions the price depends on</h3>
+      <ol style="margin:0; padding-left:4.6mm; font-size:8.4pt; color:var(--ink-soft); line-height:1.6;">
+        <li>NDA signed and a demonstration of the existing product plus an anonymised realistic data sample available in week 0.</li>
+        <li>The firm supplies its bilingual vocabulary/glossary and the PDF layout templates for the deal profile and memo.</li>
+        <li>Historical data for the 17 portfolio companies is provided as a structured extract, not as unstructured screenshots.</li>
+        <li>Google, Dropbox, Granola and Anthropic accounts and API access are provided by you; API usage is billed to you.</li>
+        <li>One staging environment on a copy of real data, never live.</li>
+        <li>Milestone acceptance decisions within five business days of each demonstration.</li>
+        <li>About six internal users, EU business hours, low concurrency.</li>
+        <li>The custom&#8209;field type list is frozen at the eight types named in the brief; new types are a change order.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. MILESTONES ============ -->
+<section class="break">
+  <div class="sec-head"><span class="sec-num">03</span><h2>Milestone plan, effort and price</h2><span class="sec-note">USD 10.00 / HOUR</span></div>
+  <p class="lede">Eight work packages, each accepted separately on the terms in §13 of your brief: automated tests pass, behaviour demonstrated on a copy of realistic data, and the section&#8209;2 principles hold. Prices are fixed per milestone; the range shows what would move it.</p>
+
+  <table class="avoid">
+    <caption>Table 3.1 — Price and effort by milestone</caption>
+    <thead><tr><th>#</th><th>Milestone</th><th class="num">Hours</th><th class="num">Price</th><th class="num">Range</th><th class="num">Weeks</th><th class="num">Payment on acceptance</th></tr></thead>
+    <tbody>
+      <tr><td class="key">P0</td><td>Discovery, architecture, programme management, handover</td><td class="num">270</td><td class="num">$2,700</td><td class="num">2,400–3,100</td><td class="num">all</td><td class="num">$2,160</td></tr>
+      <tr><td class="key">M1</td><td>Accounts, roles, data model, design system</td><td class="num">250</td><td class="num">$2,500</td><td class="num">2,200–2,900</td><td class="num">1–4</td><td class="num">$2,000</td></tr>
+      <tr><td class="key">M2</td><td>Document library, mail intake, review queue</td><td class="num">380</td><td class="num">$3,800</td><td class="num">3,400–4,300</td><td class="num">4–9</td><td class="num">$3,040</td></tr>
+      <tr><td class="key">M3</td><td>Portfolio intelligence</td><td class="num">420</td><td class="num">$4,200</td><td class="num">3,800–4,800</td><td class="num">8–14</td><td class="num">$3,360</td></tr>
+      <tr><td class="key">M4</td><td>Dealflow: pipe, inbox, board, table, configuration</td><td class="num">690</td><td class="num">$6,900</td><td class="num">6,200–7,900</td><td class="num">11–21</td><td class="num">$5,520</td></tr>
+      <tr><td class="key">M5</td><td>Founder portal</td><td class="num">140</td><td class="num">$1,400</td><td class="num">1,250–1,650</td><td class="num">17–19</td><td class="num">$1,120</td></tr>
+      <tr><td class="key">M6</td><td>Assistant</td><td class="num">160</td><td class="num">$1,600</td><td class="num">1,450–1,850</td><td class="num">19–22</td><td class="num">$1,280</td></tr>
+      <tr><td class="key">M7</td><td>Granola, Dropbox, hardening, cutover</td><td class="num">290</td><td class="num">$2,900</td><td class="num">2,600–3,300</td><td class="num">20–25</td><td class="num">$2,320</td></tr>
+    </tbody>
+    <tfoot><tr><td></td><td>Total</td><td class="num">2,600</td><td class="num">$26,000</td><td class="num">23,300–29,800</td><td class="num">26</td><td class="num">$20,800</td></tr></tfoot>
+  </table>
+  <p class="fineprint">Plus USD 3,900 mobilisation (15%) on signature and USD 1,300 retention (5%) released 30 days after the warranty period ends. Total 100%.</p>
+
+  <h3 class="sub" style="margin-top:7mm;">P0 · Discovery, architecture, programme management and handover <span class="pill neutral">270 h · $2,700</span></h3>
+  <div class="ms">
+    <div class="ms-head"><span class="ms-tag">P0</span><h3>The spine that runs through every other milestone</h3><div class="ms-figs"><strong>$2,700</strong><span>270 h · weeks 0–26</span></div></div>
+    <ul>
+      <li>Week 0 under NDA: walkthrough of the existing product, data profiling of the Notion/Outlook history and the 17&#8209;company extract, glossary and PDF layout capture.</li>
+      <li>Architecture decision records: entity model for all §12 entities, append&#8209;only audit design, job queue topology, EU residency map for every processor.</li>
+      <li>Published completeness rule per company and period (a stated deterministic rule, versioned — not a score).</li>
+      <li>Programme management: Friday written update, 30&#8209;minute weekly call, decisions log, risk register reviewed fortnightly.</li>
+      <li>QA strategy: golden claim set, idempotency tests, missing&#8209;translation test, connector contract tests, restore rehearsal checklist.</li>
+      <li>Handover: documentation, runbooks, team walkthrough, third&#8209;party licence list, warranty.</li>
+    </ul>
+    <div class="ms-foot"><span><b>Range drivers</b> volume and cleanliness of historical data; number of glossary terms; how many PDF layouts must be reproduced</span></div>
+  </div>
+
+  <h3 class="sub">M1 · Accounts, roles, data model, design system <span class="pill">250 h · $2,500</span></h3>
+  <div class="ms">
+    <div class="ms-head"><span class="ms-tag">M1</span><h3>Foundation: nothing else can be trusted until this is</h3><div class="ms-figs"><strong>$2,500</strong><span>250 h · weeks 1–4</span></div></div>
+    <ul>
+      <li>Invitation&#8209;only onboarding: one&#8209;time link that sets a password; argon2id password hashing; session tokens stored hashed, rotating, with idle and absolute expiry.</li>
+      <li>Two separate session systems — staff and founder — with distinct cookie scopes and no cross&#8209;over.</li>
+      <li>Five roles (Viewer, Editor, Reviewer, Administrator, Founder) with per&#8209;company grants enforced at the data layer, not only in the UI; the deal pipe shared by the whole team.</li>
+      <li>Origin and role checked on every state&#8209;changing request; CSRF&#8209;safe; secrets in a managed store, never in code.</li>
+      <li>Append&#8209;only audit ledger: actor, timestamp, before/after, route, request id — for every mutation, from day one.</li>
+      <li>Full schema and migrations for the §12 entity list, including claims with revisions and reviews, evidence parts, jobs, custom fields and values, statuses, connectors, sessions.</li>
+      <li>Design system: tokens, three elevation levels, accessible controls, dark mode, collapsible sidebar, responsive breakpoints, and a single layout&#8209;preference service so every screen can remember its arrangement per person.</li>
+      <li>i18n framework with one language per screen, script&#8209;written strings stored bilingually, Spanish dictionary present but off, and the CI test that fails on a missing key.</li>
+      <li>Click&#8209;to&#8209;edit primitive (click, change, Enter) built once here and reused across every table in M3 and M4; system dates excluded from editing.</li>
+    </ul>
+    <div class="ms-foot"><span><b>Accepted when</b> a Viewer cannot read an ungranted company even by direct URL; running the same mutation twice produces one audit line; the translation test fails the build on a removed key</span><span><b>Range drivers</b> SSO/MFA provider choice; number of grant permutations</span></div>
+  </div>
+
+  <h3 class="sub">M2 · Document library, mail intake, review queue <span class="pill">380 h · $3,800</span></h3>
+  <div class="ms">
+    <div class="ms-head"><span class="ms-tag">M2</span><h3>The heart of the product: provenance and human review</h3><div class="ms-figs"><strong>$3,800</strong><span>380 h · weeks 4–9</span></div></div>
+    <ul>
+      <li>Object store in the EU: every original stored once, identified by SHA&#8209;256, linked to everything read from it, downloadable by anyone with access to that company.</li>
+      <li>Library page listing what is held and its reading status; search across documents and records.</li>
+      <li>Gmail read&#8209;only connector, OAuth by an administrator, tokens encrypted; shared mailbox read every 30 minutes and the Dealflow label every 2 minutes; attachments captured; keyed on Internet Message&#8209;ID.</li>
+      <li>Job queue: mail reading, extraction, enrichment — each idempotent, resumable after failure or deploy, retried, then shown as failed with the reason. Nothing is silently dropped.</li>
+      <li>Figure and fact extraction with locators: document hash, page/paragraph/cell, exact source span, period, currency, capture method, model and prompt version.</li>
+      <li>Review queue UI: source content and the extracted field side by side, with the reason and any competing evidence; keyboard&#8209;first accept / correct / reject / reconcile / not applicable.</li>
+      <li>Revisions: a correction creates a new revision, the original is kept and diffable, and the reviewer, decision and timestamp are recorded separately from provenance.</li>
+      <li>Conflicts: same metric, two values, two sources — both retained and shown side by side until a person reconciles. No last&#8209;write&#8209;wins anywhere.</li>
+      <li>Missing is never zero: unreported figures render as Missing throughout, including exports and the assistant.</li>
+      <li>Alerts: missing report, stale report, missing KPI, source conflict, material change — deduplicated, acknowledged or snoozed with a reason, reopened on new evidence.</li>
+      <li>Actions: assigned to a person, drafting a request to the company's confirmed contact naming exactly what is missing; a person reviews and sends it from their own mail.</li>
+    </ul>
+    <div class="ms-foot"><span><b>Accepted when</b> the same mailbox is imported twice with zero new writes; a conflict shows both values with both excerpts; a correction leaves the original retrievable; no figure reaches Validated without a logged human decision</span><span><b>Range drivers</b> document variety in the sample set; number of alert types tuned</span></div>
+  </div>
+
+  <h3 class="sub">M3 · Portfolio intelligence <span class="pill">420 h · $4,200</span></h3>
+  <div class="ms">
+    <div class="ms-head"><span class="ms-tag">M3</span><h3>Seventeen companies, one dependable record each</h3><div class="ms-figs"><strong>$4,200</strong><span>420 h · weeks 8–14</span></div></div>
+    <ul>
+      <li>Dashboard: every company with lifecycle state, reporting status for the selected period, due date, last formal report, last update received, completeness, what is overdue, and portfolio allocation. Modules reorderable and resizable, layout remembered per person.</li>
+      <li>Company page with eight tabs: Executive summary, Financial KPIs, Traction and sales, Corporate and governance, Files and correspondence, Notifications, Calls, Contacts.</li>
+      <li>Any figure opens its claim: source excerpt, date, capture method and full review history.</li>
+      <li>Reporting calendar and periods: quarterly by default, half&#8209;yearly where agreed; due date = period end + 15 days with recorded exceptions; receipt of a formal report tracked separately from field completeness.</li>
+      <li>Required fields per company and period, each in one of six states: Missing, Found (public only), Found (company reported), Validated, Not applicable, Conflicting. Completeness computed by the published deterministic rule.</li>
+      <li>Notes and contacts per company, with a sentiment hint clearly marked as a suggestion; company news from public sources shown as unverified.</li>
+      <li>Calls: Granola summaries land on the company page when the people on the call are the company's (matching logic delivered in M7, rendering here).</li>
+      <li>Manual entry of figures with their source; a change history per company.</li>
+      <li>Load of the 17 companies from past data, staged through the same review path so history is provable.</li>
+    </ul>
+    <div class="ms-foot"><span><b>Accepted when</b> completeness recomputes identically for the same inputs; an unreported KPI shows Missing rather than 0; a reordered/resized dashboard survives sign&#8209;out and returns per person; every visible figure opens a claim with its excerpt</span><span><b>Range drivers</b> quality of the historical extract; number of per&#8209;company reporting exceptions</span></div>
+  </div>
+
+  <div class="break"></div>
+
+  <h3 class="sub">M4 · Dealflow: pipe, inbox, board, table, configuration <span class="pill">690 h · $6,900</span></h3>
+  <div class="ms">
+    <div class="ms-head"><span class="ms-tag">M4</span><h3>The largest package — 26.5% of total effort</h3><div class="ms-figs"><strong>$6,900</strong><span>690 h · weeks 11–21</span></div></div>
+    <ul>
+      <li><strong>Getting deals in.</strong> New deals inbox read every two minutes; each email waits for a decision — approve (opens the deal, keeps attachments, queues enrichment), reject (reply drafted in the founder's language for the team to edit and send), or attach to an existing deal. Sender becomes main contact; "introduced by X" makes the deal a referral from X.</li>
+      <li><strong>New deal form and Import deals.</strong> A list from PDF, CSV or shared link is read into a staging table the person checks before anything is created; companies already in the pipe are recognised by normalised name key so the same company is never opened twice under two spellings.</li>
+      <li><strong>First enrichment is automatic.</strong> Every deal opened by any route queues research enrichment (website, description, country, sectors, people, files); proposals accepted or rejected field by field and never overwriting what a person wrote.</li>
+      <li><strong>Deal record.</strong> All named fields — company name, website, country, sectors, description, status, stage, priority, owner, source, lead source with referrer, amount sought, currency, 888CI target ticket, pre&#8209;money valuation, revenue/ARR, deck link, next action and its date (earliest open task), main contact — plus custom fields.</li>
+      <li><strong>Eight tabs.</strong> Overview (key facts, fields, three written analyses, notes), Calls, Due diligence (SWOT, products and team, competition), Q&amp;A sessions (one document per date), Files (categorised), Team, Tasks, and an activity timeline merging status moves, notes, edits with before/after, what the company sent back, and calls.</li>
+      <li><strong>Quick actions.</strong> Note, Call (logged by hand), Email (opens the person's own mail program to the main contact), Read the deck, Reopen, and a menu with Record the investment and Delete.</li>
+      <li><strong>AI.</strong> Reads a pitch deck into the fields it can fill; runs a full analysis (summary, market, competition, risks, questions for the founder) whose results fill specific fields as suggestions with the evidence shown. Every result is a suggestion a person accepts. Cost per call recorded.</li>
+      <li><strong>Documents.</strong> One&#8209;page deal profile and full investment memo, both downloadable as PDF in your layout.</li>
+      <li><strong>Founder requests</strong> raised from the deal; answers appear on the deal (portal delivered in M5).</li>
+      <li><strong>Dropbox.</strong> Every deal gets a folder under a chosen root, named after it; files copied once and recorded so nothing is sent twice.</li>
+      <li><strong>Moving through the pipe.</strong> Steps Mapped, To analyse, First call, Due diligence, IC, plus two exits that are not steps: Invested (links to a portfolio company and carries the deal's history to it) and No go (recorded reason plus a standing revisit question: never, next round, on traction, if the team changes, or on a date). Move by dragging a card or choosing the step; nothing validates a move. Who moved it and when is recorded, with full history and days spent at each step. A company met before keeps its file; a second approach is a second deal against the same company.</li>
+      <li><strong>Board.</strong> One column per step with count and total amount; cards show amount, sectors, owner (or a visible "No owner"), stage, priority, next action date, notes, open requests and days at the step; optional extra fields chosen per person.</li>
+      <li><strong>Table.</strong> Choose, reorder and hide columns; sort by any column; select rows for bulk owner or status changes; export as PDF. Every editable value changes by clicking its cell — text, number, date, choice, several choices, yes/no, long text — each change its own line in the deal's history.</li>
+      <li><strong>Filters.</strong> Any field including custom ones, with the operators each type needs (is, is not, contains, is empty, more than, less than, before, after), combined with all or any, saved by name; saved views (all, mine, stale for 30 days, no owner, no go, invested); search by company; created&#8209;date ranges (last 7–90 days, this month, last month, this year, custom).</li>
+      <li><strong>Dashboard.</strong> Counts per step, funnel and time at each step, deals needing attention, flow by month, mix by sector and country, workload per owner, this week's calls and tasks; modules resizable, layout remembered per person.</li>
+      <li><strong>Delete.</strong> Warning that counts what goes with it (notes, files, calls, tasks, contacts), a block when something else depends on it (a portfolio company, a founder account), the company's name typed back to confirm, and a snapshot kept in the audit trail.</li>
+      <li><strong>Hover</strong> over any truncated value to read all of it.</li>
+    </ul>
+    <div class="ms-foot"><span><b>Accepted when</b> the same import list run twice creates no duplicate deal; a dragged card records actor, timestamp and days at the previous step; retiring a status moves its deals and keeps old history readable; a table edit writes its own history line without opening the deal; deleting a deal linked to a portfolio company is blocked</span><span><b>Range drivers</b> number of custom field types actually used; complexity of the memo PDF layout; volume of the import list</span></div>
+  </div>
+
+  <div class="twocol">
+    <div>
+      <h3 class="sub">M5 · Founder portal <span class="pill">140 h · $1,400</span></h3>
+      <div class="ms">
+        <div class="ms-head"><span class="ms-tag">M5</span><h3>Two uses, one sign&#8209;in, one company</h3><div class="ms-figs"><strong>$1,400</strong><span>140 h · wks 17–19</span></div></div>
+        <ul>
+          <li>Separate sign&#8209;in by invitation; a founder reaches only their own company and nothing else, enforced server&#8209;side.</li>
+          <li>Portfolio company submits its periodic report through a structured form — figures with period and currency, plus file attachments — which enters the same review queue as anything read from email.</li>
+          <li>A company in the pipe sees what the firm has asked for and answers with text or files; answers appear on the deal.</li>
+          <li>Bilingual for the founder's own language preference; blank fields submit as Missing, never as zero.</li>
+        </ul>
+        <div class="ms-foot"><span><b>Accepted when</b> a founder token cannot read another company by any route; a submitted figure appears in the review queue with the founder as capture method and is not validated automatically</span></div>
+      </div>
+    </div>
+    <div>
+      <h3 class="sub">M6 · Assistant <span class="pill">160 h · $1,600</span></h3>
+      <div class="ms">
+        <div class="ms-head"><span class="ms-tag">M6</span><h3>Cited, permission&#8209;scoped, cost&#8209;logged</h3><div class="ms-figs"><strong>$1,600</strong><span>160 h · wks 19–22</span></div></div>
+        <ul>
+          <li>Chat docked to every page, answering questions about the data with a citation for every record it mentions.</li>
+          <li>Looks up companies, deals, figures and history; may perform only operations the signed&#8209;in person already has permission to perform, each recorded as theirs.</li>
+          <li>Conversations kept per person and deletable; usage and cost recorded and visible to administrators.</li>
+          <li>Hard rule: the assistant never states an unreviewed figure as fact, and reports Missing as Missing.</li>
+          <li>No firm data used for model training; prompts retain only the minimum context needed.</li>
+        </ul>
+        <div class="ms-foot"><span><b>Accepted when</b> every answer lists its cited records; a Viewer asking the assistant to move a deal is refused and the refusal is logged; per&#8209;call cost is visible to an Administrator</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub">M7 · Integrations, hardening and cutover <span class="pill">290 h · $2,900</span></h3>
+  <div class="ms">
+    <div class="ms-head"><span class="ms-tag">M7</span><h3>Where the product becomes safe to run</h3><div class="ms-figs"><strong>$2,900</strong><span>290 h · weeks 20–25</span></div></div>
+    <ul>
+      <li><strong>Granola.</strong> Each person signs in to their own Granola; the server reads at most hourly, only notes changed since the last read, only from the Dealflow and Portfolio folders. A meeting belongs to the company whose people were in the room — first by an attendee's email on the company's contact list, then by the domain of its website or of the attendees, then by the company's name in the title. Our own people's addresses never decide a match; an ambiguous meeting is left out rather than guessed, with the reason logged. Summary filed on the company's Calls tab, updated in place if edited later; transcript optional.</li>
+      <li><strong>Dropbox</strong> connector finalised: one folder per deal, copy once, recorded.</li>
+      <li><strong>Notion and Outlook</strong> one&#8209;off history import, staged through review, with no write&#8209;back.</li>
+      <li><strong>Hardening.</strong> Route&#8209;by&#8209;route role audit, grant enforcement tests, secret rotation, EU residency verification for database, files and backups, rate limiting, dependency scanning, accessibility pass against WCAG 2.2 AA on the primary flows, performance budget on the board and table views.</li>
+      <li><strong>Resilience.</strong> Daily automated backups plus point&#8209;in&#8209;time recovery where available; a restore rehearsal executed and logged before handover; job queue replay tested after a simulated deploy.</li>
+      <li><strong>Cutover.</strong> Staging verified against a copy of realistic data, production deploy, monitored soak, documentation, runbooks, walkthrough with the team, warranty start.</li>
+    </ul>
+    <div class="ms-foot"><span><b>Accepted when</b> an ambiguous Granola meeting is excluded with a logged reason and a matching one is filed to the right company; a restore rehearsal succeeds from backup; the accessibility and idempotency suites pass on staging; runbooks are handed over</span><span><b>Range drivers</b> Granola API surface at build time; number of historical Notion/Outlook records</span></div>
+  </div>
+</section>
+
+<!-- ============ 4. TIMELINE ============ -->
+<section class="break">
+  <div class="sec-head"><span class="sec-num">04</span><h2>Timeline and schedule</h2><span class="sec-note">26 WEEKS ELAPSED</span></div>
+  <p class="lede">Work packages overlap deliberately: M2's review engine is a dependency for M3 and M4, so it starts early and finishes before the pipe needs it. The critical path runs P0 → M1 → M2 → M4 → M7.</p>
+
+  <div class="sched avoid">
+    <div class="sched-row"><span>P0 Discovery &amp; PM</span><div class="sched-track"><div class="sched-bar soft" style="left:0%; width:100%;"><em>weeks 0–26</em></div></div></div>
+    <div class="sched-row"><span>M1 Foundation</span><div class="sched-track"><div class="sched-bar" style="left:3.8%; width:15.4%;"><em>1–4</em></div></div></div>
+    <div class="sched-row"><span>M2 Library · intake · review</span><div class="sched-track"><div class="sched-bar" style="left:15.4%; width:23%;"><em>4–9</em></div></div></div>
+    <div class="sched-row"><span>M3 Portfolio intelligence</span><div class="sched-track"><div class="sched-bar" style="left:30.7%; width:26.9%;"><em>8–14</em></div></div></div>
+    <div class="sched-row"><span>M4 Dealflow</span><div class="sched-track"><div class="sched-bar" style="left:42.3%; width:42.3%;"><em>11–21</em></div></div></div>
+    <div class="sched-row"><span>M5 Founder portal</span><div class="sched-track"><div class="sched-bar" style="left:65.4%; width:11.5%;"><em>17–19</em></div></div></div>
+    <div class="sched-row"><span>M6 Assistant</span><div class="sched-track"><div class="sched-bar" style="left:73%; width:11.5%;"><em>19–22</em></div></div></div>
+    <div class="sched-row"><span>M7 Integrations · hardening</span><div class="sched-track"><div class="sched-bar" style="left:76.9%; width:23%;"><em>20–25</em></div></div></div>
+    <div class="sched-row"><span>Cutover &amp; handover</span><div class="sched-track"><div class="sched-bar brass" style="left:96%; width:4%;"><em>26</em></div></div></div>
+    <div class="sched-axis"><div></div><div><span>W0</span><span>W4</span><span>W8</span><span>W12</span><span>W16</span><span>W20</span><span>W26</span></div></div>
+  </div>
+
+  <div class="twocol">
+    <div>
+      <h3 class="sub">Key dates</h3>
+      <table class="tbl-tight">
+        <tbody>
+          <tr><td class="key">Questions to you</td><td>by 19 Nov 2026</td></tr>
+          <tr><td class="key">Quote submitted</td><td>26 Nov 2026</td></tr>
+          <tr><td class="key">Shortlist calls</td><td>week of 30 Nov 2026</td></tr>
+          <tr><td class="key">Decision</td><td>by 11 Dec 2026</td></tr>
+          <tr><td class="key">Earliest start (standard)</td><td>Mon 5 Jan 2027</td></tr>
+          <tr><td class="key">Earliest start (accelerated)</td><td>Mon 15 Dec 2026</td></tr>
+          <tr><td class="key">M1 accepted</td><td>end of week 4</td></tr>
+          <tr><td class="key">M2 accepted</td><td>end of week 9</td></tr>
+          <tr><td class="key">M3 accepted</td><td>end of week 14</td></tr>
+          <tr><td class="key">M4 accepted</td><td>end of week 21</td></tr>
+          <tr><td class="key">M5 / M6 accepted</td><td>weeks 19 / 22</td></tr>
+          <tr><td class="key">Production handover</td><td>week of 28 Jun 2027</td></tr>
+          <tr><td class="key">Warranty ends</td><td>24 Aug 2027</td></tr>
+        </tbody>
+      </table>
+      <p class="fineprint">An accelerated start on 15 December 2026 pulls handover forward by roughly three weeks but requires data samples and connector access during the holiday period. We do not recommend it.</p>
+    </div>
+    <div>
+      <h3 class="sub">What we need from you, and when</h3>
+      <table class="tbl-tight">
+        <thead><tr><th>Input</th><th>Needed by</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Signed NDA</td><td>Week 0, day 1</td></tr>
+          <tr><td class="key">Demo of the existing product</td><td>Week 0</td></tr>
+          <tr><td class="key">Anonymised realistic data sample</td><td>Week 0</td></tr>
+          <tr><td class="key">Bilingual glossary / firm vocabulary</td><td>End of week 2</td></tr>
+          <tr><td class="key">Historical extract, 17 companies</td><td>End of week 6</td></tr>
+          <tr><td class="key">Google &amp; Anthropic API access</td><td>End of week 3</td></tr>
+          <tr><td class="key">Dropbox root folder decision</td><td>End of week 10</td></tr>
+          <tr><td class="key">PDF layouts: profile &amp; memo</td><td>End of week 12</td></tr>
+          <tr><td class="key">Granola accounts per person</td><td>End of week 18</td></tr>
+          <tr><td class="key">Milestone acceptance decisions</td><td>Within 5 business days</td></tr>
+        </tbody>
+      </table>
+      <div class="callout clay">
+        <h4>Schedule risk we are naming up front</h4>
+        <p>Acceptance latency is the most common cause of slippage on a build of this shape. If a milestone demonstration waits more than ten business days for a decision, the following milestone's start moves day for day. We mitigate this by demoing on staging with realistic data every Friday from week 3, so acceptance is a confirmation rather than a reveal.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. TEAM ============ -->
+<section>
+  <div class="sec-head"><span class="sec-num">05</span><h2>Team, seniority and weekly contact</h2><span class="sec-note">≈ 4.5 FTE · SAME CORE THROUGHOUT</span></div>
+  <p class="lede">A small, stable team beats a large rotating one at this rate. The same four people carry the build from M1 to handover; two specialists join part&#8209;time. Average utilisation is 118 hours per week across 22 build weeks.</p>
+
+  <table class="avoid">
+    <caption>Table 5.1 — Named roles</caption>
+    <thead><tr><th>Role</th><th>Seniority</th><th class="num">Allocation</th><th>Owns</th><th>Contact</th></tr></thead>
+    <tbody>
+      <tr><td class="key">Delivery lead / architect <span class="todo">name</span></td><td>12+ years; fintech and regulated data platforms</td><td class="num">0.5 FTE</td><td>Architecture, ADRs, review&#8209;workflow design, acceptance demos, risk register</td><td><strong>Primary weekly contact</strong> — Friday written update + 30&#8209;min call</td></tr>
+      <tr><td class="key">Senior full&#8209;stack engineer <span class="todo">name</span></td><td>8–10 years; ingestion pipelines, Postgres</td><td class="num">1.0 FTE</td><td>Data model, audit ledger, mail intake, job queue, extraction, review engine</td><td>Weekly call, daily in shared channel</td></tr>
+      <tr><td class="key">Senior full&#8209;stack engineer <span class="todo">name</span></td><td>7–9 years; complex table/grid UIs</td><td class="num">1.0 FTE</td><td>Dealflow board and table, filters, saved views, configuration, PDF generation</td><td>Weekly call, daily in shared channel</td></tr>
+      <tr><td class="key">Frontend engineer <span class="todo">name</span></td><td>5–7 years; design systems, a11y, i18n</td><td class="num">1.0 FTE</td><td>Design tokens, dark mode, responsive layout, bilingual layer, click&#8209;to&#8209;edit primitive</td><td>Weekly call</td></tr>
+      <tr><td class="key">QA engineer <span class="todo">name</span></td><td>5+ years; test automation</td><td class="num">0.5 FTE</td><td>Golden claim set, idempotency tests, translation test, connector contract tests, restore rehearsals</td><td>Fortnightly report</td></tr>
+      <tr><td class="key">Product designer <span class="todo">name</span></td><td>6+ years; dense internal tools</td><td class="num">0.25 FTE</td><td>Reviewer ergonomics, board/table density, dashboard modules</td><td>At design reviews</td></tr>
+      <tr><td class="key">Programme manager <span class="todo">name</span></td><td>8+ years</td><td class="num">0.25 FTE</td><td>Schedule, decisions log, dependency chasing, commercial administration</td><td>Friday update author</td></tr>
+    </tbody>
+  </table>
+
+  <div class="twocol">
+    <div>
+      <h3 class="sub">How we will work with you</h3>
+      <ul style="margin:0; padding-left:4.4mm; font-size:8.6pt; color:var(--ink-soft); line-height:1.62;">
+        <li><strong>Weekly, in writing, every Friday:</strong> what shipped, what is blocked, decisions needed, hours consumed against milestone budget, risk register changes.</li>
+        <li><strong>Weekly 30&#8209;minute call</strong> with the delivery lead, in your business hours (CET).</li>
+        <li><strong>From week 3, a live staging demo every Friday</strong> on a copy of realistic data — acceptance becomes a confirmation, not a reveal.</li>
+        <li><strong>Shared channel</strong> for day&#8209;to&#8209;day questions; same&#8209;day response in EU business hours.</li>
+        <li><strong>Decisions log:</strong> every product decision recorded with who decided and when, so nothing is re&#8209;litigated in week 20.</li>
+        <li><strong>Escalation:</strong> delivery lead first; studio principal within one business day if unresolved.</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="sub">References</h3>
+      <div class="callout brass">
+        <h4>Two references supplied on request under NDA</h4>
+        <p>Named references, with contact details, are provided once the NDA is signed — we do not disclose client identities in an unsecured document. Both are selected for relevance to this brief: <strong>regulated financial data, human&#8209;in&#8209;the&#8209;loop review, and bilingual European delivery.</strong></p>
+      </div>
+      <table class="tbl-tight">
+        <thead><tr><th>Ref</th><th>Sector &amp; relevance</th><th>Contact</th></tr></thead>
+        <tbody>
+          <tr><td class="key">1</td><td>Regulated financial data — append&#8209;only audit, provenance, reviewer workflow, EU hosting <span class="todo">fill in</span></td><td><span class="todo">name · role · firm · email</span></td></tr>
+          <tr><td class="key">2</td><td>Bilingual EN/FR internal platform — document intake, extraction accuracy testing, per&#8209;role access <span class="todo">fill in</span></td><td><span class="todo">name · role · firm · email</span></td></tr>
+        </tbody>
+      </table>
+      <p class="fineprint">Complete the highlighted fields before sending. We recommend references you can brief in advance, and offering a live reference call rather than email only.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. AI APPROACH ============ -->
+<section class="break">
+  <div class="sec-head"><span class="sec-num">06</span><h2>Our approach to AI&#8209;assisted reading</h2><span class="sec-note">MEASURED · STAGED · NEVER AUTO&#8209;PUBLISHED</span></div>
+  <p class="lede">Your brief already states the right principle: nothing read automatically counts as fact. Our job is to make that principle measurable rather than merely asserted — so that a reviewer trusts the queue, and so that trust is earned with numbers rather than claims.</p>
+
+  <div class="twocol">
+    <div>
+      <h3 class="sub">How we keep a person in the loop</h3>
+      <ul style="margin:0; padding-left:4.4mm; font-size:8.6pt; color:var(--ink-soft); line-height:1.62;">
+        <li><strong>The queue is the only write path.</strong> There is no code path by which an extracted value becomes Validated without a logged human decision. This is enforced in the service layer and covered by a test, not left to UI discipline.</li>
+        <li><strong>Locator&#8209;first extraction.</strong> Every claim carries document SHA&#8209;256, page/paragraph/cell locator, the exact source span, period, currency, capture method, and model + prompt version. A reviewer can jump to the span in the original.</li>
+        <li><strong>Provenance is separate from approval.</strong> Source, period, currency, date and capture method are stored apart from who approved it and when — exactly as your brief requires.</li>
+        <li><strong>Acceptance requires opening the evidence.</strong> We log that the reviewer viewed the source excerpt before accepting. This is a nudge, not a barrier, but it makes rubber&#8209;stamping visible in the metrics.</li>
+        <li><strong>Corrections create revisions.</strong> The original value, the corrected value, the reviewer, the reason and the timestamp are all retained and diffable. Nothing is overwritten.</li>
+        <li><strong>Confidence is shown, never acted on.</strong> A high&#8209;confidence claim is still a claim. Confidence only affects queue ordering, never publication.</li>
+        <li><strong>Disagreement is escalated, not averaged.</strong> A second extraction pass that disagrees on value or unit flags the claim as Conflicting automatically, and both readings are kept.</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="sub">How we test accuracy</h3>
+      <ul style="margin:0; padding-left:4.4mm; font-size:8.6pt; color:var(--ink-soft); line-height:1.62;">
+        <li><strong>Golden set.</strong> 150–250 labelled claims drawn from real, anonymised documents across the 17 companies, refreshed quarterly and versioned in the repository.</li>
+        <li><strong>Precision gate.</strong> A field type may only auto&#8209;stage as "high confidence" once field&#8209;level precision is ≥ 0.95 on the golden set. Below that it stages as normal confidence and sorts lower.</li>
+        <li><strong>Recall reported, never used to bypass review.</strong> We publish recall so you know what extraction is missing, but a low recall never causes a value to be inferred.</li>
+        <li><strong>Unit normalisation tested separately.</strong> Currency, percentage, and per&#8209;month versus per&#8209;year errors are where financial extraction actually fails, so they have their own test suite and their own metric.</li>
+        <li><strong>Shadow mode for every change.</strong> A new prompt or model version runs in parallel over the last 30 days of documents; a human reviews the diff report before promotion. No silent swaps.</li>
+        <li><strong>Drift monitoring.</strong> Weekly acceptance rate and correction rate by document type and by company; an alert fires when the correction rate exceeds 20%.</li>
+        <li><strong>Cost per call recorded</strong> from M2 onwards — not deferred to M6 — so the assistant's budget is known before it ships, and administrators can see usage and spend.</li>
+        <li><strong>Failure is visible.</strong> A failed read is retried, then shown as failed with the reason. Nothing is silently dropped.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout accent avoid">
+    <h4>The metric we would put on your dashboard from day one</h4>
+    <p><strong>Reviewer correction rate</strong> — the share of staged claims a human changes before accepting. It is the single number that tells you whether the AI reading is trustworthy, and it is the number that tells us where to improve extraction. We propose a target of below 15% by the end of the warranty period, measured per document type, with the baseline established in week 5 against your real sample data. We would rather show you an honest baseline in week 5 than a flattering one in week 26.</p>
+  </div>
+
+  <h3 class="sub">Training and confidentiality</h3>
+  <p style="font-size:8.8pt; color:var(--ink-soft); max-width:170mm;">No firm, portfolio or deal data is used for model training. We configure the Anthropic relationship accordingly, retain prompts and responses only as long as needed for audit and cost accounting, minimise the context sent with each call, and record the model and prompt version against every claim so an answer can be reproduced. Data of private companies is treated as confidential and accessed only after NDA.</p>
+</section>
+
+<!-- ============ 7. ARCHITECTURE ============ -->
+<section>
+  <div class="sec-head"><span class="sec-num">07</span><h2>Architecture and the review workflow</h2><span class="sec-note">WEIGHT 20% · PLAN &amp; APPROACH</span></div>
+
+  <div class="twocol">
+    <div>
+      <h3 class="sub">Proposed stack</h3>
+      <table class="tbl-tight">
+        <tbody>
+          <tr><td class="key">Runtime &amp; API</td><td>TypeScript throughout; serverless workers with a single typed API layer, per&#8209;route role and grant checks</td></tr>
+          <tr><td class="key">Frontend</td><td>React + TypeScript; documented design tokens; one language per screen; click&#8209;to&#8209;edit primitive shared by every table</td></tr>
+          <tr><td class="key">Database</td><td>PostgreSQL in an EU region; migrations versioned; append&#8209;only audit table with no UPDATE or DELETE grants to the application role</td></tr>
+          <tr><td class="key">Files</td><td>EU object storage, content&#8209;addressed by SHA&#8209;256; originals immutable; downloads authorised per company grant</td></tr>
+          <tr><td class="key">Jobs</td><td>Durable queue with cron triggers every 2 minutes; each job idempotent and resumable; attempts, failure reason and idempotency key persisted</td></tr>
+          <tr><td class="key">AI</td><td>Anthropic Claude via a thin gateway that records prompt version, tokens, cost per call, and refuses any path that writes a Validated figure</td></tr>
+          <tr><td class="key">Auth</td><td>Invitation&#8209;only; argon2id passwords; hashed rotating session tokens; separate staff and founder session systems</td></tr>
+          <tr><td class="key">Observability</td><td>Structured logs with request id, error tracking, job&#8209;level metrics, alert on correction&#8209;rate drift</td></tr>
+          <tr><td class="key">Environments</td><td>Local, staging (copy of realistic data, never live), production; identical migration and seed tooling</td></tr>
+        </tbody>
+      </table>
+      <p class="fineprint">We are comfortable building on your existing Cloudflare production footprint or on the stack above in an EU region. If you prefer to stay entirely on Cloudflare, we would flag one trade&#8209;off in writing before M1: verify that EU&#8209;only residency can be guaranteed for both the database and the object store, since that is a stated requirement rather than a preference.</p>
+    </div>
+    <div>
+      <h3 class="sub">The claim lifecycle</h3>
+      <table class="tbl-tight">
+        <thead><tr><th>State</th><th>How it is entered</th><th>Visible as</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Missing</td><td>No value received for a required field and period</td><td>"Missing" — never 0, never blank</td></tr>
+          <tr><td class="key">Found (public only)</td><td>Read from a public source</td><td>Unverified, source labelled public</td></tr>
+          <tr><td class="key">Found (company reported)</td><td>Read from a company document, email or founder form</td><td>Staged, awaiting review</td></tr>
+          <tr><td class="key">Conflicting</td><td>Two sources give different values for the same metric and period</td><td>Both values side by side until reconciled</td></tr>
+          <tr><td class="key">Validated</td><td>A Reviewer or Administrator accepts or corrects, with the source excerpt opened</td><td>The figure of record, with full chain</td></tr>
+          <tr><td class="key">Not applicable</td><td>A reviewer marks the field inapplicable for that company and period</td><td>Excluded from completeness by rule</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:8.5pt; color:var(--ink-soft);">Every transition writes an audit row with actor, timestamp, prior value and reason. Revisions are never destructive: a corrected claim points back to the claim it supersedes, so the whole chain can be replayed.</p>
+
+      <h3 class="sub">Ingestion idempotency</h3>
+      <table class="tbl-tight">
+        <tbody>
+          <tr><td class="key">Email</td><td>Internet Message&#8209;ID</td></tr>
+          <tr><td class="key">Document</td><td>SHA&#8209;256 of bytes</td></tr>
+          <tr><td class="key">Deal</td><td>Normalised name key</td></tr>
+          <tr><td class="key">Dropbox copy</td><td>Per&#8209;deal copy record</td></tr>
+          <tr><td class="key">Job run</td><td>Idempotency key + attempt count</td></tr>
+        </tbody>
+      </table>
+      <p class="fineprint">Each has an automated test that executes the operation twice and asserts zero additional writes on the second run. These tests are part of the M2 and M4 acceptance evidence.</p>
+    </div>
+  </div>
+
+  <h3 class="sub">Annex: a working prototype already exists</h3>
+  <div class="callout accent avoid">
+    <h4>Clickable prototype demonstrating the review workflow, bilingual behaviour and pipe mechanics</h4>
+    <p>To show we understood the brief rather than merely read it, we built an interactive prototype before quoting. It demonstrates: 17 portfolio companies with reporting status, due dates and deterministic completeness; a seven&#8209;step deal pipeline with board and table views, inline editing, filters and bulk actions; a review queue with pending, conflicting, validated, rejected and not&#8209;applicable claims; a conflict shown side by side with both source excerpts; corrections that create revisions while preserving the original; an isolated founder portal that submits into the same review queue; a simulated operations queue exposing Message&#8209;ID and SHA&#8209;256 idempotency keys; and a source&#8209;citing assistant. Strictly one language per screen, switchable EN/FR, with five role&#8209;bound demo accounts.</p>
+    <p style="margin-top:2mm;"><strong>What it is not:</strong> it is a front&#8209;end prototype with browser&#8209;local demo data. It has no database, no real connectors, no authentication and no deployment. It exists to prove the interaction model and the principles — not to be handed over as the product. We are happy to walk you through it on the shortlist call.</p>
+  </div>
+</section>
+
+<!-- ============ 8. SECURITY & COSTS ============ -->
+<section class="break">
+  <div class="sec-head"><span class="sec-num">08</span><h2>Security, backups, incident response and running costs</h2><span class="sec-note">WEIGHT 10% · DATA HANDLING</span></div>
+
+  <div class="twocol">
+    <div>
+      <h3 class="sub">Security controls</h3>
+      <ul style="margin:0; padding-left:4.4mm; font-size:8.5pt; color:var(--ink-soft); line-height:1.6;">
+        <li>Invitation&#8209;only accounts via one&#8209;time link; argon2id password hashing; hashed, rotating session tokens with idle and absolute expiry.</li>
+        <li>Separate session systems for staff and founders, with distinct cookie scopes and no shared token store.</li>
+        <li>Origin and role checked on every state&#8209;changing request; per&#8209;company grants enforced in the data layer.</li>
+        <li>Secrets in a managed secret store, never in code or repository; per&#8209;environment isolation; least&#8209;privilege service tokens; OAuth tokens encrypted at rest.</li>
+        <li>Append&#8209;only audit of every change with actor, timestamp, before/after, route and request id.</li>
+        <li>European data residency for database, files and backups; residency of each third&#8209;party processor disclosed in a connector matrix (see risk R8).</li>
+        <li>Dependency scanning, secret scanning and SAST in CI; TLS everywhere; security headers; rate limiting on auth and ingestion routes.</li>
+        <li>Data of private companies treated as confidential; NDA signed before any access; staging uses a masked copy, never live data.</li>
+      </ul>
+
+      <h3 class="sub">Backups and restore</h3>
+      <ul style="margin:0; padding-left:4.4mm; font-size:8.5pt; color:var(--ink-soft); line-height:1.6;">
+        <li>Daily automated backups, encrypted, EU&#8209;resident, plus point&#8209;in&#8209;time recovery where the provider supports it.</li>
+        <li>Object store originals are content&#8209;addressed and immutable; versioning enabled.</li>
+        <li><strong>A restore rehearsal is executed and logged before handover</strong> — a scratch environment rebuilt from backup, with a written checklist and result. This is M7 acceptance evidence, not a promise.</li>
+        <li>Retention: backups 35 days rolling; audit ledger retained indefinitely within the product's life.</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="sub">Incident response</h3>
+      <table class="tbl-tight">
+        <thead><tr><th>Severity</th><th>Definition</th><th>Acknowledge</th><th>Update</th></tr></thead>
+        <tbody>
+          <tr><td class="key">SEV 1</td><td>Production down, or suspected data exposure</td><td>≤ 1 business hour</td><td>Every 2 h</td></tr>
+          <tr><td class="key">SEV 2</td><td>Core workflow broken; workaround exists</td><td>≤ 4 business hours</td><td>Daily</td></tr>
+          <tr><td class="key">SEV 3</td><td>Degraded feature, no data impact</td><td>≤ 1 business day</td><td>Weekly</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:8.4pt; color:var(--ink-soft);">Every SEV 1 and SEV 2 produces a written root&#8209;cause note within five business days. You are the data controller and we act as processor under a DPA; in any incident affecting personal data we notify you without undue delay so you can meet your own notification obligations. Support runs in European business hours; out&#8209;of&#8209;hours cover is available as a change order.</p>
+
+      <h3 class="sub">Hosting and running costs after delivery</h3>
+      <table class="tbl-tight">
+        <caption>Table 8.1 — Estimated monthly cost, USD</caption>
+        <thead><tr><th>Item</th><th class="num">Low</th><th class="num">Typical</th><th class="num">High</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Compute &amp; API (serverless)</td><td class="num">5</td><td class="num">18</td><td class="num">35</td></tr>
+          <tr><td class="key">PostgreSQL, EU region</td><td class="num">25</td><td class="num">45</td><td class="num">69</td></tr>
+          <tr><td class="key">Object storage, EU (originals)</td><td class="num">5</td><td class="num">14</td><td class="num">30</td></tr>
+          <tr><td class="key">Queues &amp; scheduled jobs</td><td class="num">0</td><td class="num">6</td><td class="num">12</td></tr>
+          <tr><td class="key">Observability &amp; error tracking</td><td class="num">26</td><td class="num">40</td><td class="num">60</td></tr>
+          <tr><td class="key">Backup storage &amp; restore scratch</td><td class="num">10</td><td class="num">17</td><td class="num">25</td></tr>
+          <tr><td class="key">Anthropic Claude API</td><td class="num">15</td><td class="num">72</td><td class="num">80</td></tr>
+          <tr><td class="key">Domain, DNS, misc.</td><td class="num">5</td><td class="num">8</td><td class="num">12</td></tr>
+          <tr><td class="key">Infrastructure subtotal</td><td class="num">91</td><td class="num">220</td><td class="num">323</td></tr>
+          <tr><td class="key">Maintenance retainer (24 h @ $10)</td><td class="num">240</td><td class="num">240</td><td class="num">240</td></tr>
+        </tbody>
+        <tfoot><tr><td>Total per month</td><td class="num">$331</td><td class="num">$460</td><td class="num">$563</td></tr></tfoot>
+      </table>
+      <p class="fineprint">Budget <strong>≈ USD 460 per month</strong>. Excludes subscriptions you already hold: Google Workspace, Dropbox, Granola, Notion. The retainer covers patching, connector monitoring, dependency updates, translation upkeep, backup and restore checks, minor fixes, and a monthly written health report. Infrastructure is billed by the provider directly to you, so you own every account.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 9. RISKS ============ -->
+<section>
+  <div class="sec-head"><span class="sec-num">09</span><h2>Risks, and what we would change</h2><span class="sec-note">STATED PLAINLY</span></div>
+
+  <table class="avoid">
+    <caption>Table 9.1 — Risk register at quote stage</caption>
+    <thead><tr><th>#</th><th>Risk</th><th class="num">Impact</th><th>Mitigation</th></tr></thead>
+    <tbody>
+      <tr><td class="key">R1</td><td><strong>Dealflow is a third of the product.</strong> Board, table, filters, saved views, configuration and inline editing interact; changes late in M4 are expensive.</td><td class="num">High</td><td>Build the grid, filter and custom&#8209;field engine as one reusable component in M1/M2. Freeze the field&#8209;type list at M1. Split M4 acceptance into two gates: pipe mechanics, then views and configuration.</td></tr>
+      <tr><td class="key">R2</td><td><strong>Extraction accuracy versus expectation.</strong> Real documents vary; a reviewer who loses trust in the queue stops using it.</td><td class="num">High</td><td>Golden set, precision gate ≥ 0.95, shadow mode for every prompt/model change, correction&#8209;rate dashboard with a published baseline in week 5. Nothing auto&#8209;publishes, so poor accuracy costs reviewer time, never data integrity.</td></tr>
+      <tr><td class="key">R3</td><td><strong>Granola meeting attribution is genuinely ambiguous.</strong> Wrong attribution files a call against the wrong company.</td><td class="num">Medium</td><td>Deterministic three&#8209;tier match exactly as your brief specifies; our own addresses never decide; ambiguous meetings excluded with the reason logged and surfaced for a person to file manually.</td></tr>
+      <tr><td class="key">R4</td><td><strong>Bilingual completeness drifts</strong> as the product grows, breaking the one&#8209;language&#8209;per&#8209;screen rule.</td><td class="num">Medium</td><td>CI test fails the build on any missing key; script&#8209;written strings must be stored with both forms at the type level, so a monolingual insert does not compile.</td></tr>
+      <tr><td class="key">R5</td><td><strong>Historical data quality</strong> from Notion/Outlook and the 17&#8209;company extract may be inconsistent.</td><td class="num">Medium</td><td>Profile the data in week 0–1 before committing M3 hours. Import is staged through the review queue, so bad history becomes a visible claim rather than a silent corruption.</td></tr>
+      <tr><td class="key">R6</td><td><strong>Rate and calendar.</strong> At USD 10/hour the build spans 26 weeks; long calendars lose context.</td><td class="num">Medium</td><td>Same four core people throughout, weekly written update, decisions log, Friday staging demos from week 3. We would rather name this than discover it in week 15.</td></tr>
+      <tr><td class="key">R7</td><td><strong>Per&#8209;person layout memory</strong> (resizable modules, saved filters, hidden columns) creates many small persistence paths that are easy to get subtly wrong.</td><td class="num">Low</td><td>One layout&#8209;preference service built in M1 and used by every screen, with a single tested serialisation format.</td></tr>
+      <tr><td class="key">R8</td><td><strong>EU residency across third parties.</strong> Your database and files can be EU&#8209;resident, but Dropbox, Granola and Anthropic are separate processors with their own regions.</td><td class="num">High</td><td>We deliver a connector matrix naming each processor, its region, its DPA position and its residency guarantee, and flag any gap in writing before M1. This is a decision for you as controller; we will not paper over it.</td></tr>
+      <tr><td class="key">R9</td><td><strong>Scope creep through custom fields.</strong> Every new field type multiplies across table, board, filters, cards, profile and export.</td><td class="num">Medium</td><td>Eight types frozen at M1; additional types quoted as change orders at the day rate, with the multiplication cost stated explicitly.</td></tr>
+      <tr><td class="key">R10</td><td><strong>"Nothing validates a move" versus audit integrity.</strong> Free movement is right for the team, but Invested and No go have consequences.</td><td class="num">Low</td><td>Moves are unvalidated as specified; the two exits carry their required consequences (link and carried history; reason and revisit rule) and both are recorded with actor and timestamp.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">What we would change about the brief</h3>
+  <div class="twocol">
+    <div>
+      <ul style="margin:0; padding-left:4.4mm; font-size:8.5pt; color:var(--ink-soft); line-height:1.6;">
+        <li><strong>Split M4 into two acceptances.</strong> Pipe mechanics and record first; board, table, filters and configuration second. It shortens the longest unbroken stretch of risk from eleven weeks to about six.</li>
+        <li><strong>Freeze the custom&#8209;field type list now</strong>, in writing, at the eight types named. Adding a type later touches six surfaces and should be priced as such.</li>
+        <li><strong>Add a reviewer SLA and queue&#8209;ageing report from day one.</strong> The greatest threat to a human&#8209;in&#8209;the&#8209;loop system is not bad extraction; it is a queue nobody empties. Ageing by claim and by company makes that visible.</li>
+        <li><strong>Make completeness a versioned, published rule per company and period</strong> rather than one global formula, so an exception is a recorded decision rather than a code change.</li>
+      </ul>
+    </div>
+    <div>
+      <ul style="margin:0; padding-left:4.4mm; font-size:8.5pt; color:var(--ink-soft); line-height:1.6;">
+        <li><strong>Build an evidence viewer with locator highlighting in M2.</strong> It is the single largest reviewer&#8209;speed win available and it is cheap while the extraction layer is being written; retrofitting it later is not.</li>
+        <li><strong>Log AI cost per call from M2, not M6</strong>, so the assistant's budget is understood before it ships.</li>
+        <li><strong>Treat dark mode and resizable modules as M7 candidates</strong> if schedule pressure appears. They are real requirements but they are polish; provenance and the queue are the product.</li>
+        <li><strong>Ask for a decision&#8209;rights map in week 0</strong> — who may accept a claim, who may retire a status, who may delete a deal. Several behaviours in the brief depend on it and it is far cheaper to settle early.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. CRITERIA ============ -->
+<section class="break">
+  <div class="sec-head"><span class="sec-num">10</span><h2>How this quote maps to your evaluation criteria</h2><span class="sec-note">WEIGHTED</span></div>
+  <table class="avoid">
+    <thead><tr><th>Criterion</th><th class="num">Weight</th><th>Where it is answered</th><th>Our position</th></tr></thead>
+    <tbody>
+      <tr><td class="key">Fit with the principles in §2 and the scope above</td><td class="num">30%</td><td>§1, §2, §6, §7 and every milestone acceptance line</td><td>Provenance, human review, append&#8209;only history, Missing&#8209;not&#8209;zero, idempotent ingestion, in&#8209;place editing, one language per screen and no outbound sending are each implemented as an enforced constraint with a test, not as a UI convention. Investor&#8209;facing scope is excluded.</td></tr>
+      <tr><td class="key">Plan, architecture and approach to the review workflow</td><td class="num">20%</td><td>§3 milestone detail, §7 claim lifecycle and stack</td><td>Eight acceptance&#8209;gated packages on a 26&#8209;week critical path, with the review engine built before the modules that depend on it. A working prototype already demonstrates the workflow.</td></tr>
+      <tr><td class="key">Team and relevant experience</td><td class="num">20%</td><td>§5 roles, seniority, weekly contact, references</td><td>Stable core of four through the whole build, two named references in regulated financial data and bilingual European delivery supplied under NDA.</td></tr>
+      <tr><td class="key">Price and commercial terms</td><td class="num">20%</td><td>§1 headline, §3 per&#8209;milestone pricing, §8 running costs, §11 terms</td><td>USD 26,000 fixed at the specified rate, with a stated range and named drivers; day rate for out&#8209;of&#8209;scope work; 15/80/5 payment; monthly run cost of about USD 460; eight&#8209;week warranty.</td></tr>
+      <tr><td class="key">Security and data handling</td><td class="num">10%</td><td>§8 controls, backups, restore rehearsal, incident response</td><td>EU residency for database and files, hashed rotating tokens, per&#8209;route role and grant checks, append&#8209;only audit, tested restore, staged data only, and an honest disclosure of third&#8209;party processor residency (R8).</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Questions we would submit before 19 November 2026</h3>
+  <ol style="margin:0; padding-left:4.8mm; font-size:8.6pt; color:var(--ink-soft); line-height:1.62;">
+    <li>May we see the existing product under NDA before finalising the M4 estimate? The board, table and configuration surfaces are where our range is widest.</li>
+    <li>Is EU&#8209;only residency required for the third&#8209;party processors too (Dropbox, Granola, Anthropic), or only for the database and files you control? Our answer to R8 depends on it.</li>
+    <li>How many documents per month should the reading pipeline handle at launch, and what is the expected growth over 24 months? This sizes the queue and the Claude budget.</li>
+    <li>Who holds decision rights for accepting a claim, retiring a pipeline status and deleting a deal?</li>
+    <li>For the 17 portfolio companies, is the historical data available as a structured extract, or will it need reading from documents? The latter moves effort from M3 into M2.</li>
+    <li>Do the one&#8209;page deal profile and full investment memo layouts already exist as templates we can reproduce, or do they need designing?</li>
+    <li>Is the warranty period you expect us to propose eight weeks, or do you have a standard length?</li>
+    <li>Should the platform's own transactional notifications (invitation links, password resets) be sent by us, given the "no outbound sending" principle applies to company and deal correspondence?</li>
+  </ol>
+</section>
+
+<!-- ============ 11. TERMS ============ -->
+<section>
+  <div class="sec-head"><span class="sec-num">11</span><h2>Commercial terms</h2><span class="sec-note">PAYMENT · WARRANTY · OWNERSHIP</span></div>
+
+  <div class="twocol">
+    <div>
+      <h3 class="sub">Payment schedule</h3>
+      <table class="tbl-tight">
+        <thead><tr><th>Trigger</th><th class="num">Share</th><th class="num">USD</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Mobilisation, on signature</td><td class="num">15%</td><td class="num">3,900</td></tr>
+          <tr><td class="key">Milestone releases, on acceptance (pro&#8209;rata to milestone value)</td><td class="num">80%</td><td class="num">20,800</td></tr>
+          <tr><td class="key">Retention, 30 days after warranty ends</td><td class="num">5%</td><td class="num">1,300</td></tr>
+        </tbody>
+        <tfoot><tr><td>Total</td><td class="num">100%</td><td class="num">26,000</td></tr></tfoot>
+      </table>
+      <p class="fineprint">Invoiced in USD, payable within 14 days. A milestone is accepted when its automated tests pass, its behaviour is demonstrated on a copy of realistic data, and the section&#8209;2 principles hold. Undisputed acceptance is deemed given five business days after a demonstration unless you raise a written defect.</p>
+
+      <h3 class="sub">Work outside scope</h3>
+      <table class="tbl-tight">
+        <tbody>
+          <tr><td class="key">Day rate (8 hours)</td><td class="num">USD 80</td></tr>
+          <tr><td class="key">Half day (4 hours)</td><td class="num">USD 40</td></tr>
+          <tr><td class="key">Weekend or emergency</td><td class="num">USD 120 / day</td></tr>
+          <tr><td class="key">Hourly, ad hoc</td><td class="num">USD 10</td></tr>
+        </tbody>
+      </table>
+      <p class="fineprint">Authorised in writing before work begins, in half&#8209;day increments, with a short statement of what changes and what it affects. Nothing is billed that was not authorised.</p>
+    </div>
+    <div>
+      <h3 class="sub">Warranty</h3>
+      <p style="font-size:8.6pt; color:var(--ink-soft);">We propose <strong>eight weeks</strong> from production handover (to 24 August 2027), covering defects against the accepted milestones: the product does not do what was demonstrated, a principle in §2 is violated, a test regresses, or a connector stops working through no change of yours. Defects are fixed at no charge within the severity response times in §8. Excluded: new features, changes caused by third&#8209;party API changes after handover, data entered incorrectly by users, and anything in the exclusions list in §2.</p>
+
+      <h3 class="sub">Ownership</h3>
+      <p style="font-size:8.6pt; color:var(--ink-soft);">You own the code, the data and every account the platform runs on. All work is assigned to you with no licence restrictions and no residual rights retained by us. Third&#8209;party licences are listed in an appendix at handover, each with its licence type and any obligation it creates. We ask only for the right to name you as a client after go&#8209;live, which you may withhold.</p>
+
+      <h3 class="sub">Handover</h3>
+      <ul style="margin:0; padding-left:4.4mm; font-size:8.5pt; color:var(--ink-soft); line-height:1.6;">
+        <li>Architecture and data&#8209;model documentation, including the ADRs.</li>
+        <li>Runbooks: deploy, rollback, restore from backup, replay a failed job, rotate a secret, add a locale key, retire a pipeline status.</li>
+        <li>Connector matrix: processor, region, DPA position, token location, failure behaviour.</li>
+        <li>Test suite and golden claim set handed over with the repository.</li>
+        <li>Two recorded walkthrough sessions for the team plus one for administrators.</li>
+        <li>Third&#8209;party licence list and account inventory.</li>
+      </ul>
+
+      <div class="callout accent" style="margin-top:4mm;">
+        <h4>Validity and next steps</h4>
+        <p>This quote is valid until 31 January 2027 at the stated rate. If shortlisted, we would use the call to walk you through the working prototype, the claim lifecycle and the golden&#8209;set method — and to answer the eight questions in §10. Start requires a signed NDA, the week&#8209;0 data sample, and API access for Google and Anthropic.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sig avoid">
+    <div><div class="line"></div><p>For Alinea Build Studio · name, role · date</p></div>
+    <div><div class="line"></div><p>Accepted for GoSmartEx · name, role · date</p></div>
+  </div>
+
+  <p class="fineprint" style="margin-top:6mm;">Prepared in response to "Product brief: build the platform from scratch", Portfolio and dealflow platform, issued 12 November 2026. This document contains no investor&#8209;facing scope. Figures highlighted as <span class="todo">to complete</span> must be filled in before sending. All prices in USD, exclusive of VAT, at the blended rate of USD 10.00 per hour specified by the buyer.</p>
+</section>
+
+</div>
+</body>
+</html>
